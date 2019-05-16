@@ -12,7 +12,7 @@ addpath  'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed
 cd 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\RA_mode\chicken_RA'
 
 %% Subject details
-SubName= 'DLG62'; %'BICA59','BICA6'};
+SubName= 'BIARI287'; %'BICA59','BICA6'};
 opts=detectImportOptions(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],'NumHeaderLines',0); % this is for the headers names
 data=readtable(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],opts);
 
@@ -92,7 +92,7 @@ fprintf('trials in chicken training= %d ', counter(1,1));
 
 %------ check the complete blocks ------- %
 % see if there are any complete runs and how many are there - you might not need this here...
-complete_trials_RA=size(find(contains(data_chicken_RA.state,'complete')),1) %it should be 33
+complete_trials_child=size(find(contains(data_chicken_RA.state,'complete')),1) %it should be 33
 % if the answer is 0, look for specific things see below
 %% -------------------------------- Warm-up mode --------------------%
 rows=find(contains(data_chicken_RA.phase_type,'warmup'));
@@ -255,9 +255,9 @@ adaptive_percent_correct=correct_nr_trls_adaptive/tot_trials_adaptive
 % % ---------------------- 1 hutches -------------------------
 rows1=find(contains(data_chicken_RA_adaptive.difficulty,'1'))
 % 
-data_RA_adaptive_1hutches=data_chicken_RA_adaptive(rows1,vars)
+data_child_adaptive_1hutches=data_chicken_RA_adaptive(rows1,vars)
 % 
-acc_adaptive_1hutches=find(contains(data_RA_adaptive_1hutches.correct,'True'))
+acc_adaptive_1hutches=find(contains(data_child_adaptive_1hutches.correct,'True'))
 % 
 acc_adaptive_1hutches= size(acc_adaptive_1hutches,1)
 
@@ -266,29 +266,29 @@ acc_adaptive_1hutches= size(acc_adaptive_1hutches,1)
 % % ---------------------- 2 hutches -------------------------
 rows2=find(contains(data_chicken_RA_adaptive.difficulty,'2'))
 % 
-data_RA_adaptive_2hutches=data_chicken_RA_adaptive(rows2,vars)
+data_child_adaptive_2hutches=data_chicken_RA_adaptive(rows2,vars)
 % 
-acc_adaptive_2hutches=find(contains(data_RA_adaptive_2hutches.correct,'True'))
+acc_adaptive_2hutches=find(contains(data_child_adaptive_2hutches.correct,'True'))
 % 
 acc_adaptive_2hutches= size(acc_adaptive_2hutches,1)
 
 % ---------------------- 3 hutches -------------------------
 rows3=find(contains(data_chicken_RA_adaptive.difficulty,'3'))
 
-% rows0= data_chicken_RA_adaptive.difficulty(1:6,1)
+% rows0= data_chicken_child_adaptive.difficulty(1:6,1)
 
-data_RA_adaptive_3hutches=data_chicken_RA_adaptive(rows3,vars)
+data_child_adaptive_3hutches=data_chicken_RA_adaptive(rows3,vars)
 
-acc_adaptive_3hutches=find(contains(data_RA_adaptive_3hutches.correct,'True'))
+acc_adaptive_3hutches=find(contains(data_child_adaptive_3hutches.correct,'True'))
 
 acc_adaptive_3hutches= size(acc_adaptive_3hutches,1)
 
 % --------------------- 4 hutches -------------------
 rows4=find(contains(data_chicken_RA_adaptive.difficulty,'4'))
 
-data_RA_adaptive_4hutches=data_chicken_RA_adaptive(rows4,vars)
+data_child_adaptive_4hutches=data_chicken_RA_adaptive(rows4,vars)
 
-acc_adaptive_4hutches=find(contains(data_RA_adaptive_4hutches.correct,'True'))
+acc_adaptive_4hutches=find(contains(data_child_adaptive_4hutches.correct,'True'))
 
 acc_adaptive_4hutches= size(acc_adaptive_4hutches,1)
 
@@ -298,9 +298,9 @@ acc_adaptive_4hutches= size(acc_adaptive_4hutches,1)
 
 rows5 = find(contains(data_chicken_RA_adaptive.difficulty,'5'))
 
-data_RA_adaptive_5hutches=data_chicken_RA_adaptive(rows5,vars)
+data_child_adaptive_5hutches=data_chicken_RA_adaptive(rows5,vars)
 
-acc_adaptive_5hutches=find(contains(data_RA_adaptive_5hutches.correct,'True'))
+acc_adaptive_5hutches=find(contains(data_child_adaptive_5hutches.correct,'True'))
 
 acc_adaptive_5hutches= size(acc_adaptive_5hutches,1)
 
@@ -311,9 +311,9 @@ acc_adaptive_5hutches= size(acc_adaptive_5hutches,1)
 rows6= find(contains(data_chicken_RA_adaptive.difficulty,'6'))
 
 
-data_RA_adaptive_6hutches=data_chicken_RA_adaptive(rows6,vars)
+data_child_adaptive_6hutches=data_chicken_RA_adaptive(rows6,vars)
 
-acc_adaptive_6hutches=find(contains(data_RA_adaptive_6hutches.correct,'True'))
+acc_adaptive_6hutches=find(contains(data_child_adaptive_6hutches.correct,'True'))
 
 acc_adaptive_6hutches= size(acc_adaptive_6hutches,1)
 
@@ -323,9 +323,9 @@ acc_adaptive_6hutches= size(acc_adaptive_6hutches,1)
 
 rows7= find(contains(data_chicken_RA_adaptive.difficulty,'7'))
 
-data_RA_adaptive_7hutches=data_chicken_RA_adaptive(rows7,vars)
+data_child_adaptive_7hutches=data_chicken_RA_adaptive(rows7,vars)
 
-acc_adaptive_7hutches=find(contains(data_RA_adaptive_7hutches.correct,'True'))
+acc_adaptive_7hutches=find(contains(data_child_adaptive_7hutches.correct,'True'))
 
 acc_adaptive_7hutches= size(acc_adaptive_7hutches,1)
 
@@ -333,9 +333,9 @@ acc_adaptive_7hutches= size(acc_adaptive_7hutches,1)
 rows8= find(contains(data_chicken_RA_adaptive.difficulty,'8'))
 
 
-data_RA_adaptive_8hutches=data_chicken_RA_adaptive(rows8,vars)
+data_child_adaptive_8hutches=data_chicken_RA_adaptive(rows8,vars)
 
-acc_adaptive_8hutches=find(contains(data_RA_adaptive_8hutches.correct,'True'))
+acc_adaptive_8hutches=find(contains(data_child_adaptive_8hutches.correct,'True'))
 
 acc_adaptive_8hutches= size(acc_adaptive_8hutches,1)
 
@@ -367,7 +367,7 @@ clear rows0 rows1 rows2 rows3 rows4 rows5 rows6 rows7 rows8
 %%  write results to excel file
  %1st sheet is baseline
  
-vars1=table(complete_trials_RA, bsln_tot_trials,correct_nr_trls_baseline,baseline_percent_correct)
+vars1=table(complete_trials_child, bsln_tot_trials,correct_nr_trls_baseline,baseline_percent_correct)
 
 writetable(vars1,filename,'Sheet',3)
 
@@ -396,7 +396,7 @@ vars2=table(adaptive_tot_trials,...
 
 writetable(vars2,filename,'Sheet',4)
 
-winopen([SubName '_RAresults.xlsx']);
+winopen([SubName '_childresults.xlsx']);
 
 clear vars2
 

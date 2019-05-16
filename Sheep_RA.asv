@@ -4,14 +4,14 @@ clear all;
 close all;
 clc;restoredefaultpath
 
-addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\Diandra\scripts\FarmApp'
+addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\Diandra\scripts'
 addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\*'
 
 
 cd 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\RA_mode\sheep_RA\excel_output'
 
 %% Subject details
-SubName= 'BIZDH44'; %'BICA59','BICA6'};
+SubName= 'BIARI287'; %'BICA59','BICA6'};
 opts=detectImportOptions(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],'NumHeaderLines',0); % this is for the headers names
 data=readtable(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],opts);
 
@@ -75,10 +75,17 @@ complete_trials_RA=size(find(contains(data_sheep_RA.state,'complete')),1)
  sheep_warmup_RA  =size(find(wrapper_sheep(:,1)==1 & wrapper_sheep(:,2)==1),1)
  sheep_training_RA=size(find(wrapper_sheep(:,1)==1 & wrapper_sheep(:,2)==0),1)
  
+ %---------------------------- export data in excel----------------------%
+
+vars1=table(sheep_RA_tot_trials,complete_trials_RA, sheep_baseline_RA, sheep_adaptive_RA, sheep_warmup_RA,sheep_training_RA);
+
+filename=[SubName '_RAresults1.xlsx'];
+
+writetable(vars1,filename,'Sheet',1)
+
+clear rows1 vars vars1
  
- 
- %% %% ------------- Exctract TRAINING trials --------------------- %
- 
+%% ------------- Exctract TRAINING trials --------------------- %
 rows=find(contains(data_sheep_RA.phase_type,'training'))
 vars={'state','mode','run_nr','trial_nr','trial_type','phase_type','block_nr','block_type','response_0','duration','responseTime_0'}
 data_sheep_ra_training=data_sheep_RA(rows,vars)
@@ -129,25 +136,7 @@ RT_go_only_training=mean(data_sheep_RA_training_correct.responseTime_0,1); % you
 clear rows1
 
 % export data in excel 
-vars1=table(sheep_training_RA,training_mix_trials,acc_training,RT_training,training_goonly_trials,acc_training_goonly, RT_training_goonly,training_nogo_trials,acc_training_nogo)
-filename=[SubName '_RAresults1.xlsx'];
 
-writetable(vars1,filename,'Sheet',1)
-
-clear rows1 vars vars1
-
-%%
- 
- %---------------------------- export data in excel----------------------%
-
-vars1=table(sheep_RA_tot_trials,complete_trials_RA, sheep_baseline_RA, sheep_adaptive_RA, sheep_warmup_RA);
-
-filename=[SubName '_RAresults1.xlsx'];
-
-writetable(vars1,filename,'Sheet',2)
-
-clear rows1 vars vars1
- 
 
 
 %% -------------------- Extract BASELINE trials ------------------- %
@@ -280,7 +269,7 @@ vars1=table(runs_baseline,...
 
 % xlswrite([SubName '_RAresults.xlsx'],vars1, sheet)
 
-writetable(vars1,filename,'Sheet',3)
+writetable(vars1,filename,'Sheet',2)
 
 clear rows1 vars vars1
 
@@ -368,7 +357,7 @@ vars1=table(runs_adaptive,...
 % sheet=3;
 % xlswrite([SubName '_RAresults.xlsx'],vars1,sheet);
 
-writetable(vars1,filename, 'Sheet',4)
+writetable(vars1,filename, 'Sheet',3)
 
 winopen([SubName '_RAresults1.xlsx']);
 
