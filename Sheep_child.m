@@ -4,16 +4,16 @@ clear all;
 close all;
 clc;restoredefaultpath
 
-addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\Diandra\scripts'
-addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\CALM group\excel_data\*'
+addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\Diandra\scripts\FarmApp'
+addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\*'
 
 
-cd 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\CALM group\excel_results'
+cd 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\child_mode\sheep\excel_results'
 
 %% Subject details
-SubName= 'BICA6'; %'BICA59','BICA6'};
-opts=detectImportOptions(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\CALM group\excel_data\',SubName, '-data.csv'],'NumHeaderLines',0); % this is for the headers names
-data=readtable(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\CALM group\excel_data\',SubName, '-data.csv'],opts);
+SubName= 'BISTX5'; %'BICA59','BICA6'};
+opts=detectImportOptions(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],'NumHeaderLines',0); % this is for the headers names
+data=readtable(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],opts);
 
 %% --------------------------- Sheep game first-vhild mode ------------------------- %
     
@@ -73,10 +73,11 @@ complete_trials_child=size(find(contains(data_sheep_child.state,'complete')),1)
  sheep_baseline_child=size(find(wrapper_sheep(:,1)==2 & wrapper_sheep(:,2)==2),1)
  sheep_adaptive_child=size(find(wrapper_sheep(:,1)==2 & wrapper_sheep(:,2)==3),1)
  sheep_warmup_child  =size(find(wrapper_sheep(:,1)==2 & wrapper_sheep(:,2)==1),1)
+ sheep_training_child=size(find(wrapper_sheep(:,1)==2 & wrapper_sheep(:,2)==0),1)
  
  %---------------------------- export data in excel----------------------%
 
-vars1=table(sheep_child_tot_trials,complete_trials_child, sheep_baseline_child, sheep_adaptive_child, sheep_warmup_child);
+vars1=table(sheep_child_tot_trials,complete_trials_child, sheep_baseline_child, sheep_adaptive_child, sheep_warmup_child, sheep_training_child);
 
 filename=[SubName '_childresults2.xlsx'];
 
@@ -84,7 +85,65 @@ writetable(vars1,filename,'Sheet',1)
 
 clear rows1 vars vars1
  
+%%  %% %% ------------- Exctract TRAINING trials --------------------- %
  
+rows=find(contains(data_sheep_child.phase_type,'training'))
+vars={'state','mode','run_nr','trial_nr','trial_type','phase_type','block_nr','block_type','response_0','duration','responseTime_0'}
+data_sheep_child_training=data_sheep_child(rows,vars)
+
+training_goonly_trials=size(find(contains(data_sheep_child_training.trial_type,'go')),1)
+
+training_mix_trials=size(find(contains(data_sheep_child_training.block_type,'mixed')),1)
+
+training_nogo_trials=size(find(contains(data_sheep_child_training.trial_type,'nogo')),1)
+
+
+% ----------------- accuracy training - go only -------------------------%
+
+vars={'state','mode','run_nr','trial_nr','trial_type','phase_type','block_nr','block_type','response_0','duration','responseTime_0'}
+
+rows1=find(contains(data_sheep_child_training.response_0,'True'));
+
+data_sheep_child_training_correct=data_sheep_child_training(rows1,vars);
+
+acc_training=size(rows1,1)
+
+RT_training=mean(data_sheep_child_training_correct.responseTime_0,1); % you need to save this!
+
+clear rows1 
+
+%--------  accuracy and RT go only
+
+rows1=find(strcmp(data_sheep_child_training_correct.trial_type,'go'));
+
+acc_training_goonly=size(rows1,1)
+
+training_goonly=data_sheep_child_training_correct(rows1,vars)
+
+RT_training_goonly=mean(training_goonly.responseTime_0,1); % you need to save this!
+
+clear rows1
+
+% ------------ NOGO accuracy 
+
+rows1=find(contains(data_sheep_child_training_correct.trial_type,'nogo'));
+
+%rows1=find(ismember(data_sheep_RA_training_correct.trial_type(:),'nogo'));
+
+acc_training_nogo=size(rows1,1)
+
+RT_go_only_training=mean(data_sheep_child_training_correct.responseTime_0,1); % you need to save this!
+
+clear rows1
+
+% export data in excel 
+vars1=table(sheep_training_child,training_mix_trials,acc_training,RT_training,training_goonly_trials,acc_training_goonly, RT_training_goonly,training_nogo_trials,acc_training_nogo)
+
+writetable(vars1,filename,'Sheet',2)
+
+clear rows1 vars vars1
+ 
+
 
 %% -------------------- Extract BASELINE trials ------------------- %
 %let's try simple indexing - get only the basline trials
@@ -220,7 +279,7 @@ vars1=table(runs_baseline,...
 
 % xlswrite([SubName '_childresults.xlsx'],vars1, sheet)
 
-writetable(vars1,filename,'Sheet',2)
+writetable(vars1,filename,'Sheet',3)
 
 clear rows1 vars vars1
 
@@ -308,7 +367,7 @@ vars1=table(runs_adaptive,...
 % sheet=3;
 % xlswrite([SubName '_RAresults.xlsx'],vars1,sheet);
 
-writetable(vars1,filename, 'Sheet',3)
+writetable(vars1,filename, 'Sheet',4)
 
 winopen([SubName '_childresults2.xlsx']);
 

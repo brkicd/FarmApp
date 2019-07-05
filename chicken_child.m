@@ -5,13 +5,13 @@ close all;
 clc;
 restoredefaultpath
 addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\test_data\'
-addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\Diandra\scripts'
-addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed'\'BINGO group\'
+addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\Diandra\scripts\FarmApp\'
+addpath 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel'
 
 cd 'Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\child_mode\chicken'
 
 %% Subject details
-SubName= 'BIZDH44'; %'BICA59','BICA6'};
+SubName= 'BITRI149'; %'BICA59','BICA6'};
 opts=detectImportOptions(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],'NumHeaderLines',0); % this is for the headers names
 data=readtable(['Z:\BINGO - PID\Data\App data\Participants json files\Not yet processed\BINGO group\excel\',SubName, '-data.csv'],opts);
 
@@ -25,7 +25,7 @@ data_chicken=(data(task,:));
 
 mode=find(contains(data_chicken.mode,'child'));
 
-data_chicken_child=(data_chicken(mode,:))
+data_chicken_child=(data_chicken(mode,:));
 
 %% check how many trials in each mode
  % wrapper_chicken (i,1) --> 1= 'ra', 2='child', 3='adult'
@@ -132,44 +132,44 @@ clear vars1 sheet
 
 
 %%
-%%------------------------------------ Training mode------------------------ %%
-rows=find(contains(data_chicken_child.phase_type,'training'));
-
-vars={'state','run_nr','trial_nr','block_nr',....
-     'phase_type','difficulty','fixedSequence','correct',...
-     'hutch_id_0','hutch_stimulusId_0','response_0','responseTime_0',...
-     'hutch_id_1','hutch_stimulusId_1','response_1','responseTime_1',...
-     'hutch_id_2','hutch_stimulusId_2','response_2','responseTime_2',...
-     'hutch_id_3','hutch_stimulusId_3','response_3','responseTime_3',...
-     'hutch_id_4','hutch_stimulusId_4','response_4','responseTime_4',...
-     'hutch_id_5','hutch_stimulusId_5','response_5','responseTime_5',...
-     'hutch_id_6','hutch_stimulusId_6','response_6','responseTime_6',...
-     'hutch_id_7','hutch_stimulusId_7','response_7','responseTime_7'
-     }
-data_chicken_child_training=data_chicken_child(rows,vars);
-clear rows 
-% ----- accuracy and RT time -------------- % 
-rows1=find(contains(data_chicken_child_training.correct,'True'))
-correct_nr_trls_training=size((rows1),1)
-
-% count the incorrect ones
-rows2=find(contains(data_chicken_child_training.correct,'False'))
-incorrect_nr_trls_training=size((rows2),1)
-
-% import only correct trials
-chicken_training_correct=data_chicken_child_training(rows1,vars)
-clear rows1 rows0
-
-% proportion correct training (2 hutches)
-training_percent_correct=correct_nr_trls_training/training_tot_trials
-
-
-% export to excel
- 
-vars1=table(training_tot_trials, correct_nr_trls_training,incorrect_nr_trls_training,training_percent_correct)
-writetable(vars1,filename,'Sheet',2)
-
-clear vars1 sheet
+% %%------------------------------------ Training mode------------------------ %%
+% rows=find(contains(data_chicken_child.phase_type,'training'));
+% 
+% vars={'state','run_nr','trial_nr','block_nr',....
+%      'phase_type','difficulty','fixedSequence','correct',...
+%      'hutch_id_0','hutch_stimulusId_0','response_0','responseTime_0',...
+%      'hutch_id_1','hutch_stimulusId_1','response_1','responseTime_1',...
+%      'hutch_id_2','hutch_stimulusId_2','response_2','responseTime_2',...
+%      'hutch_id_3','hutch_stimulusId_3','response_3','responseTime_3',...
+%      'hutch_id_4','hutch_stimulusId_4','response_4','responseTime_4',...
+%      'hutch_id_5','hutch_stimulusId_5','response_5','responseTime_5',...
+%      'hutch_id_6','hutch_stimulusId_6','response_6','responseTime_6',...
+%      'hutch_id_7','hutch_stimulusId_7','response_7','responseTime_7'
+%      }
+% data_chicken_child_training=data_chicken_child(rows,vars);
+% clear rows 
+% % ----- accuracy and RT time -------------- % 
+% rows1=find(contains(data_chicken_child_training.correct,'True'))
+% correct_nr_trls_training=size((rows1),1)
+% 
+% % count the incorrect ones
+% rows2=find(contains(data_chicken_child_training.correct,'False'))
+% incorrect_nr_trls_training=size((rows2),1)
+% 
+% % import only correct trials
+% chicken_training_correct=data_chicken_child_training(rows1,vars)
+% clear rows1 rows0
+% 
+% % proportion correct training (2 hutches)
+% training_percent_correct=correct_nr_trls_training/training_tot_trials
+% 
+% 
+% % export to excel
+%  
+% vars1=table(training_tot_trials, correct_nr_trls_training,incorrect_nr_trls_training,training_percent_correct)
+% writetable(vars1,filename,'Sheet',2)
+% 
+% clear vars1 sheet
 
 
 
@@ -235,6 +235,13 @@ incorrect_nr_trls_adaptive=size((rows2),1)
 
 % import only correct trials
 chicken_adaptive_correct=data_chicken_child_adaptive(rows1,vars)
+
+
+% count the complete runs adaptive
+complete_trials_adaptive=size(find(contains(data_chicken_child_adaptive.state,'complete')),1) %it should be 33
+
+complete_runs_adaptive= (size(data_chicken_child_adaptive(:,1),1)/18)
+
 clear rows0 rows1 rows2
 %% count the difficulty and the proportion of correct trials - do these even change???
 
@@ -368,12 +375,13 @@ clear rows0 rows1 rows2 rows3 rows4 rows5 rows6 rows7 rows8
  
 vars1=table(complete_trials_child, bsln_tot_trials,correct_nr_trls_baseline,baseline_percent_correct)
 
-writetable(vars1,filename,'Sheet',3)
+writetable(vars1,filename,'Sheet',2)
 
 clear vars1 sheet
 
 % 2nd sheet is adaptive phase
-vars2=table(adaptive_tot_trials,...
+vars2=table(complete_runs_adaptive,...
+    adaptive_tot_trials,...
     correct_nr_trls_adaptive,...
     adaptive_percent_correct,...
     acc_adaptive_1hutches,...
@@ -393,7 +401,7 @@ vars2=table(adaptive_tot_trials,...
     acc_adaptive_8hutches,...
     adaptive_8hutches)
 
-writetable(vars2,filename,'Sheet',4)
+writetable(vars2,filename,'Sheet',3)
 
 winopen([SubName '_childresults.xlsx']);
 
